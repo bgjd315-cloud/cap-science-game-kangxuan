@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>自然戰力覺醒・康軒版｜國中會考自然知識挑戰遊戲</title>
+<meta name="description" content="自然戰力覺醒（康軒版）：解鎖知識，挑戰你的自然實力！國中會考自然科歷屆考點計時挑戰遊戲：極速賽、生存挑戰、單元特訓、雙人對決、錯題本與考點圖鑑。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1b3e; --bg2:#13265a; --panel:#182f6b; --panel2:#1f3a80; --line:#2c4a96;
+  --ink:#f3f6ff; --mute:#a9b8e3; --gold:#ffd23f; --ok:#2ecc71; --bad:#ff5a5f;
+  --bio:#3ddc84; --chem:#ff9f43; --phy:#4dabf7; --earth:#b197fc;
+  --r:18px; --sh:0 6px 0 rgba(0,0,0,.25);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{background:radial-gradient(1200px 600px at 50% -10%,#24479b 0,var(--bg) 60%) fixed,var(--bg);color:var(--ink);
+  font-family:"Noto Sans TC",system-ui,sans-serif;line-height:1.5;overflow-x:hidden}
+button{font:inherit;color:inherit;border:0;cursor:pointer;background:none}
+.wrap{max-width:980px;margin:0 auto;padding:16px 16px 40px}
+.hide{display:none!important}
+h1,h2,h3{margin:0;line-height:1.25}
+
+/* top bar */
+.top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.top .back{background:var(--panel);border-radius:12px;padding:8px 14px;box-shadow:var(--sh);font-weight:700}
+.top .ttl{font-weight:900;font-size:20px;flex:1}
+.iconbtn{background:var(--panel);border-radius:12px;width:42px;height:42px;display:grid;place-items:center;font-size:20px;box-shadow:var(--sh)}
+
+/* hero */
+.hero{text-align:center;padding:18px 8px 6px}
+.hero .badge{display:inline-block;background:var(--gold);color:#3a2a00;font-weight:900;border-radius:999px;padding:4px 14px;font-size:14px;letter-spacing:.1em}
+.hero h1{font-size:clamp(34px,7vw,58px);font-weight:900;margin:10px 0 4px;letter-spacing:.04em;
+  background:linear-gradient(180deg,#fff 30%,#ffe27a);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 4px 0 rgba(0,0,0,.35))}
+.hero p{color:var(--mute);margin:0}
+.stats{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:14px 0 4px}
+.stat{background:var(--panel);border-radius:14px;padding:6px 14px;font-size:14px;color:var(--mute)}
+.stat b{color:var(--ink);font-size:18px;margin-right:2px}
+
+.namebox{display:flex;gap:8px;justify-content:center;align-items:center;margin:14px 0}
+.namebox input{background:var(--bg2);border:2px solid var(--line);border-radius:12px;color:var(--ink);font:inherit;padding:8px 12px;width:180px;text-align:center}
+
+/* subject filter */
+.filter{background:var(--panel);border-radius:var(--r);padding:12px;margin:12px 0}
+.filter .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{border-radius:999px;padding:7px 14px;font-weight:700;background:var(--bg2);border:2px solid var(--line);font-size:15px}
+.chip.on{border-color:var(--gold);background:#3a3a10;color:var(--gold)}
+.chip.s-bio.on{border-color:var(--bio);color:var(--bio);background:#0f3a28}
+.chip.s-chem.on{border-color:var(--chem);color:var(--chem);background:#3d2810}
+.chip.s-phy.on{border-color:var(--phy);color:var(--phy);background:#0f2c4a}
+.chip.s-earth.on{border-color:var(--earth);color:var(--earth);background:#2a2150}
+.filter .sum{color:var(--mute);font-size:14px;margin-left:auto}
+.units{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin-top:10px}
+.unit{display:flex;align-items:center;gap:6px;background:var(--bg2);border:2px solid transparent;border-radius:10px;padding:6px 8px;font-size:13px;text-align:left}
+.unit.on{border-color:var(--gold)}
+.unit img{width:28px;height:28px;border-radius:6px;object-fit:cover;flex:none;background:#0003}
+.unit .bar{height:4px;background:#0004;border-radius:2px;margin-top:3px;overflow:hidden}
+.unit .bar i{display:block;height:100%;background:var(--ok)}
+
+/* modes */
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:12px}
+.mode{position:relative;text-align:left;border-radius:var(--r);padding:16px;box-shadow:var(--sh);min-height:120px;overflow:hidden;transition:transform .1s}
+.mode:active{transform:translateY(3px);box-shadow:0 3px 0 rgba(0,0,0,.25)}
+.mode .ic{font-size:34px}
+.mode h3{font-size:20px;font-weight:900;margin:4px 0 2px}
+.mode p{margin:0;font-size:14px;opacity:.9}
+.m1{background:linear-gradient(135deg,#ff6b6b,#e8414f)}
+.m2{background:linear-gradient(135deg,#f78fb3,#c44569)}
+.m3{background:linear-gradient(135deg,#20bf6b,#0b8a4b)}
+.m4{background:linear-gradient(135deg,#4b7bec,#3053c4)}
+.m5{background:linear-gradient(135deg,#fa8231,#d35400)}
+.m6{background:linear-gradient(135deg,#8854d0,#5f27cd)}
+.m7{background:linear-gradient(135deg,#0fb9b1,#0a7f7a)}
+.mode .cnt{position:absolute;right:12px;top:12px;background:#0005;border-radius:999px;padding:2px 10px;font-weight:700;font-size:13px}
+
+/* game HUD */
+.hud{display:flex;gap:8px;align-items:stretch;margin-bottom:12px}
+.hud .box{background:var(--panel);border-radius:14px;padding:6px 12px;text-align:center;min-width:76px;box-shadow:var(--sh)}
+.hud .box small{display:block;color:var(--mute);font-size:12px}
+.hud .box b{font-size:22px;font-weight:900}
+.hud .grow{flex:1}
+.timer{height:12px;background:#0005;border-radius:999px;overflow:hidden;margin-bottom:12px}
+.timer i{display:block;height:100%;background:linear-gradient(90deg,var(--ok),var(--gold));border-radius:999px;transition:width .1s linear}
+.timer.low i{background:var(--bad)}
+.hearts{font-size:22px;letter-spacing:2px}
+.combo{color:var(--gold)}
+.qcard{background:#fff;color:#14213d;border-radius:22px;padding:20px 20px 18px;box-shadow:0 8px 0 rgba(0,0,0,.3);position:relative;min-height:130px}
+.qcard .tag{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#fff;border-radius:999px;padding:3px 10px 3px 4px;margin-bottom:8px}
+.qcard .tag img{width:22px;height:22px;border-radius:50%;object-fit:cover;background:#fff3}
+.qcard .q{font-size:clamp(19px,3.4vw,25px);font-weight:700}
+.qcard .tfmark{display:inline-block;font-size:13px;font-weight:900;background:#14213d;color:#fff;border-radius:6px;padding:1px 8px;margin-right:6px;vertical-align:3px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.opt{background:var(--panel2);border-radius:16px;padding:14px 14px 14px 48px;text-align:left;font-size:clamp(16px,2.6vw,19px);font-weight:500;position:relative;box-shadow:var(--sh);min-height:62px;transition:transform .08s,background .15s}
+.opt:active{transform:translateY(3px)}
+.opt .k{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:8px;background:#0004;display:grid;place-items:center;font-weight:900;font-size:14px}
+.opt.ok{background:var(--ok);color:#06351b}
+.opt.no{background:var(--bad)}
+.opt.dim{opacity:.45}
+.opts.tf .opt{font-size:34px;font-weight:900;text-align:center;padding:12px}
+.opts.tf .opt .k{display:none}
+.feedback{margin-top:12px;border-radius:16px;padding:12px 14px;font-size:16px;background:var(--panel)}
+.feedback.good{border-left:6px solid var(--ok)}
+.feedback.bad{border-left:6px solid var(--bad)}
+.feedback b{color:var(--gold)}
+.next{display:block;width:100%;margin-top:10px;background:var(--gold);color:#3a2a00;font-weight:900;font-size:18px;border-radius:14px;padding:12px;box-shadow:var(--sh)}
+.pop{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%);font-size:44px;font-weight:900;pointer-events:none;text-shadow:0 4px 0 #0007;animation:pop .7s ease-out forwards;z-index:50;white-space:nowrap}
+@keyframes pop{0%{opacity:0;transform:translate(-50%,-30%) scale(.6)}25%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}100%{opacity:0;transform:translate(-50%,-90%) scale(1)}}
+.shake{animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.countdown{position:fixed;inset:0;display:grid;place-items:center;background:#0d1b3ecc;z-index:60;font-size:120px;font-weight:900;color:var(--gold)}
+
+/* results */
+.result{text-align:center}
+.result .big{font-size:64px;font-weight:900;color:var(--gold);line-height:1;margin:8px 0}
+.result .stars{font-size:40px;letter-spacing:6px}
+.rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.rgrid div{background:var(--panel);border-radius:14px;padding:8px}
+.rgrid small{display:block;color:var(--mute)}
+.rgrid b{font-size:22px}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:12px 0}
+.btn{background:var(--panel2);border-radius:14px;padding:12px 18px;font-weight:900;box-shadow:var(--sh)}
+.btn.gold{background:var(--gold);color:#3a2a00}
+.list{text-align:left;margin-top:12px}
+.item{background:var(--panel);border-radius:14px;padding:10px 14px;margin-bottom:8px}
+.item .uq{font-size:12px;color:var(--mute)}
+.item .qq{font-weight:700}
+.item .aa{color:var(--ok);font-weight:700}
+.item .ee{color:var(--mute);font-size:14px}
+.item .yourA{color:var(--bad);font-size:14px}
+.confetti{position:fixed;top:-12px;width:9px;height:14px;border-radius:2px;z-index:70;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{top:105vh;transform:rotate(720deg) translateX(40px)}}
+.newrec{display:inline-block;background:var(--bad);border-radius:999px;padding:2px 12px;font-weight:900;animation:pop2 1s infinite alternate}
+@keyframes pop2{to{transform:scale(1.08)}}
+
+/* leaderboard */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+table.lb{width:100%;border-collapse:collapse;background:var(--panel);border-radius:14px;overflow:hidden}
+.lb th,.lb td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line)}
+.lb th{color:var(--mute);font-weight:500;font-size:13px}
+.lb tr:first-child td{color:var(--gold);font-weight:900}
+
+/* dex */
+.search{width:100%;background:var(--bg2);border:2px solid var(--line);border-radius:12px;color:var(--ink);font:inherit;padding:10px 12px;margin-bottom:10px}
+.dexunit{margin:16px 0 8px;display:flex;align-items:center;gap:10px}
+.dexunit img{width:44px;height:44px;border-radius:10px;object-fit:cover}
+.dexunit h3{font-size:18px}
+
+/* duel */
+.duel{position:fixed;inset:0;display:grid;grid-template-rows:1fr auto 1fr;background:var(--bg);z-index:40}
+.duel .half{padding:12px;display:flex;flex-direction:column;gap:8px;min-height:0}
+.duel .half.p1{transform:rotate(180deg);background:linear-gradient(0deg,#3a1a2a,var(--bg))}
+.duel .half.p2{background:linear-gradient(0deg,#102a4a,var(--bg))}
+.duel .mid{display:flex;align-items:center;justify-content:center;gap:16px;padding:6px;background:var(--bg2);font-weight:900}
+.duel .pscore{display:flex;justify-content:space-between;align-items:center;font-weight:900}
+.duel .pscore .sc{font-size:28px;color:var(--gold)}
+.duel .dq{background:#fff;color:#14213d;border-radius:16px;padding:10px 14px;font-weight:700;font-size:clamp(15px,2.6vw,20px)}
+.duel .opts{margin-top:0;flex:1;min-height:0}
+.duel .opt{min-height:48px;padding:8px 10px 8px 40px;font-size:clamp(14px,2.4vw,17px)}
+.duel .opts.tf .opt{font-size:28px;padding:6px}
+.duel .lock{opacity:.35;pointer-events:none}
+.duel .msg{font-size:15px;color:var(--gold);min-height:1.5em;text-align:center}
+.duel .quit{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:var(--panel);border-radius:10px;padding:4px 10px;font-size:13px}
+
+/* 美術素材（有圖才顯示） */
+.hero .banner{position:relative;aspect-ratio:16/9;max-height:520px;width:100%;border-radius:24px;overflow:visible;margin-bottom:14px;
+  padding-top:clamp(10px,3vw,26px);box-shadow:0 8px 0 rgba(0,0,0,.3);
+  background:linear-gradient(180deg,rgba(13,27,62,.55) 0%,rgba(13,27,62,0) 38%),var(--heroimg) center/cover no-repeat}
+.hero .banner h1{font-size:clamp(26px,6.4vw,60px);margin:clamp(4px,1vw,10px) 0 0}
+.hero .banner .badge{font-size:clamp(11px,1.8vw,14px)}
+.hero .banner .mascot{position:absolute;right:1.5%;bottom:-18px;width:clamp(70px,17%,150px);height:auto;margin:0}
+.hero .mascot{width:110px;height:110px;object-fit:contain;display:block;margin:-6px auto 0;filter:drop-shadow(0 6px 0 rgba(0,0,0,.3));animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px)}}
+.mode .mart{position:absolute;right:-6px;bottom:-8px;width:104px;height:104px;object-fit:contain;filter:drop-shadow(0 4px 0 rgba(0,0,0,.25));pointer-events:none}
+.mode.hasart{padding-right:96px}
+.mode h3 .cnt{position:static;display:inline-block;margin-left:8px;vertical-align:3px}
+.mode.hasart .ic{display:none}
+.chip .sic{width:20px;height:20px;object-fit:contain;vertical-align:-4px;margin-right:2px}
+.feedback{display:flex;gap:10px;align-items:center}
+.feedback .fm{width:64px;height:64px;object-fit:contain;flex:none}
+.result .trophy{width:140px;height:140px;object-fit:contain;display:block;margin:0 auto -6px;animation:bob 2.4s ease-in-out infinite}
+.hero .slogan{color:var(--ink);font-size:clamp(15px,2.4vw,18px)}
+.hero .slogan b{color:var(--gold);font-size:clamp(18px,3vw,24px);font-weight:900;letter-spacing:.03em}
+.cta{text-align:center;font-weight:900;font-size:clamp(17px,2.8vw,22px);color:var(--gold);margin:18px 0 4px;text-shadow:0 3px 0 rgba(0,0,0,.35)}
+.foot{color:var(--mute);font-size:13px;text-align:center;margin-top:24px}
+.foot a{color:var(--mute)}
+@media (max-width:560px){
+  .opts{grid-template-columns:1fr}
+  .opts.tf{grid-template-columns:1fr 1fr}
+  .hud .box{min-width:60px;padding:4px 8px}
+  .hud .box b{font-size:18px}
+  .duel .opts{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+const QB=[];
+/*__BANK__*/
+</script>
+<script>
+/* ========= 基本資料 ========= */
+const UNITS={"U01":"細胞與顯微鏡","U02":"養分與能量","U03":"運輸、呼吸、排泄與恆定","U04":"協調作用","U05":"生殖與遺傳","U06":"演化與生物分類","U07":"生態系與環境保護","U08":"物質的性質","U09":"波動、聲音與光","U10":"溫度與熱","U11":"原子、元素與週期表","U12":"化學反應與計量","U13":"氧化與還原","U14":"電解質與酸鹼鹽","U15":"反應速率與平衡","U16":"有機化合物","U17":"力、壓力與浮力","U18":"直線運動與牛頓定律","U19":"功與能、簡單機械","U20":"電路","U21":"電流磁效應與電磁感應","U22":"地球構造、岩石與板塊","U23":"大氣、海洋與天氣","U24":"天文"};
+const SUBJ={bio:{n:"生物",c:"var(--bio)",u:["U01","U02","U03","U04","U05","U06","U07"]},
+  chem:{n:"化學",c:"var(--chem)",u:["U08","U11","U12","U13","U14","U15","U16"]},
+  phy:{n:"物理",c:"var(--phy)",u:["U09","U10","U17","U18","U19","U20","U21"]},
+  earth:{n:"地科",c:"var(--earth)",u:["U22","U23","U24"]}};
+const subjOf=u=>Object.keys(SUBJ).find(k=>SUBJ[k].u.includes(u));
+const ART=u=>`https://bgjd315-cloud.github.io/cap-science-map/art/${u}.webp`;
+const Q=QB.map((r,i)=>r.length>=7?{id:i,u:r[0],q:r[1],a:r[2],w:[r[3],r[4],r[5]],e:r[6],src:r[7]||"會考考點",tf:false}
+  :{id:i,u:r[0],q:r[1],a:r[2]?"O":"X",w:[r[2]?"X":"O"],e:r[3],src:r[4]||"會考考點",tf:true});
+Q.forEach(q=>{q.id=q.q;q.yrs=(typeof QY!=="undefined"&&QY[q.q])||[]}); /* 以題目文字當穩定 ID；yrs＝歷屆會考考過的年份 */
+const art=n=>IMG.has(n)?`img/${n}.webp`:"";
+const artTag=(n,cls)=>IMG.has(n)?`<img class="${cls}" src="img/${n}.webp" alt="" onerror="this.remove()">`:"";
+const yrsTxt=q=>q.yrs.length?`📝 ${q.yrs.join("、")} 年會考考過`:"";
+const FILTERED=Q.some(q=>q.yrs.length);
+const ALLY=Q.flatMap(q=>q.yrs).map(Number);const YR=ALLY.length?`${Math.min(...ALLY)}～${Math.max(...ALLY)}`:"";
+Q.forEach(q=>q.vol=q.src==="會考考點"?"會考":q.src.replace(/^康軒(\S+).*$/,"$1"));
+const VOLS=["會考","7上","7下","8上","8下","9上","9下"].filter(v=>Q.some(q=>q.vol===v));
+const VOLNAME=v=>v==="會考"?"會考考點地圖":"康軒 "+v;
+const MODES={speed:"極速 60 秒",survive:"生存挑戰",practice:"單元特訓",duel:"雙人對決",review:"錯題特訓"};
+
+/* ========= 儲存 ========= */
+const store={get(k,d){try{const v=localStorage.getItem("capgame_kx_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("capgame_kx_"+k,JSON.stringify(v))}catch(e){}}};
+let S=store.get("stats",{}); // id -> {c:答對次數, w:答錯次数, s:連對}
+let BOOK=new Set(store.get("book",[]));
+let LB=store.get("lb",{});
+let PREF=store.get("pref",{name:"",subj:"all",units:[],sound:true});
+const save=()=>{store.set("stats",S);store.set("book",[...BOOK]);store.set("lb",LB);store.set("pref",PREF)};
+function record(q,ok){const s=S[q.id]||(S[q.id]={c:0,w:0,s:0});
+  if(ok){s.c++;s.s++;if(BOOK.has(q.id)&&s.s>=2)BOOK.delete(q.id)}else{s.w++;s.s=0;BOOK.add(q.id)}}
+const mastered=q=>{const s=S[q.id];return s&&s.s>=2};
+
+/* ========= 音效 ========= */
+/* 全部用 Web Audio 即時合成，不需要音檔。SFX＝音效、MUS＝背景音樂，各自有開關 */
+if(PREF.music===undefined)PREF.music=true;
+let AC,SFX,MUS,NOISE;
+function ac(){if(!AC){AC=new (window.AudioContext||window.webkitAudioContext)();
+    SFX=AC.createGain();SFX.gain.value=.9;SFX.connect(AC.destination);
+    MUS=AC.createGain();MUS.gain.value=.32;MUS.connect(AC.destination);
+    NOISE=AC.createBuffer(1,AC.sampleRate,AC.sampleRate);const d=NOISE.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}
+  if(AC.state==="suspended")AC.resume();return AC}
+function tone(f,t,d,o={}){const os=AC.createOscillator(),g=AC.createGain();os.type=o.type||"triangle";os.frequency.setValueAtTime(f,t);
+  if(o.slide)os.frequency.exponentialRampToValueAtTime(o.slide,t+d);
+  const v=o.vol??.12;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.006);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+  os.connect(g);g.connect(o.dest||SFX);os.start(t);os.stop(t+d+.02)}
+function noise(t,d,o={}){const s=AC.createBufferSource(),f=AC.createBiquadFilter(),g=AC.createGain();s.buffer=NOISE;
+  f.type=o.ft||"highpass";f.frequency.value=o.fq||1000;if(o.Q)f.Q.value=o.Q;const v=o.vol??.08,a=o.att||.004;
+  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+  s.connect(f);f.connect(g);g.connect(o.dest||SFX);s.start(t,Math.random()*.5);s.stop(t+d+.02)}
+/* C 大調音階：連對越多，答對音越高 */
+const SCALE=[0,2,4,5,7,9,11],deg=n=>523.25*Math.pow(2,(12*Math.floor(n/7)+SCALE[((n%7)+7)%7])/12);
+function beep(type,arg){if(!PREF.sound)return;try{ac();const t=AC.currentTime+.01;
+  if(type==="ok"){const s=Math.min((arg||1)-1,14);tone(deg(s),t,.09);tone(deg(s+2),t+.07,.16);if(s>=3)tone(deg(s+4),t+.14,.2,{vol:.09});if(s>=7)noise(t+.14,.25,{fq:6000,vol:.03})}
+  else if(type==="bad"){tone(220,t,.26,{type:"sawtooth",vol:.07,slide:150});tone(208,t+.04,.24,{type:"square",vol:.03,slide:140})}
+  else if(type==="tick")tone(880,t,.05);
+  else if(type==="go"){tone(523,t,.08);tone(784,t+.07,.18)}
+  else if(type==="warn")tone(1568,t,.05,{type:"square",vol:.035});
+  else if(type==="end")[523,659,784,1047].forEach((f,i)=>tone(f,t+i*.1,.2));
+  else if(type==="cheer"){ // 號角＋觀眾歡呼＋掌聲
+    [392,523,659,784].forEach((f,i)=>tone(f,t+i*.09,.16,{type:"square",vol:.06}));
+    [523,659,784,1047].forEach(f=>tone(f,t+.38,1.1,{type:"triangle",vol:.08}));
+    tone(1047,t+.38,1.1,{type:"square",vol:.03});
+    for(let k=0;k<5;k++)noise(t+.3+k*.06,1.8+Math.random()*.6,{ft:"bandpass",fq:900+k*350,Q:.8,vol:.07,att:.25});
+    for(let k=0;k<26;k++)noise(t+.35+Math.random()*1.6,.04,{fq:1800,vol:.12})}
+}catch(e){}}
+
+/* 背景音樂：16 拍一小節，C–Am–F–G 循環；hot＝最後衝刺（加速、加打擊） */
+const BGM={on:false,bpm:120,hot:false,step:0,next:0,timer:null};
+const CHORDS=[[0,4,7],[-3,0,4],[-7,-3,0],[-5,-1,2]];
+const st=s=>261.63*Math.pow(2,s/12);
+function bgmStep(i,t){const bar=Math.floor(i/16)%4,s=i%16,ch=CHORDS[bar],dur=60/BGM.bpm/4,o={dest:MUS};
+  if(s%8===0)tone(110,t,.12,{type:"sine",vol:.5,slide:45,dest:MUS});                       // 大鼓
+  if(BGM.hot&&s%8===4)noise(t,.09,{fq:1500,vol:.18,dest:MUS});                              // 衝刺時的小鼓
+  if(s%4===0||s%8===6)tone(st(ch[0]-12),t,dur*2.2,{type:"square",vol:.06,dest:MUS});        // 貝斯
+  if(BGM.hot?true:s%2===0)noise(t,.03,{fq:7000,vol:BGM.hot?.05:.03,dest:MUS});               // 鈸
+  if(BGM.hot||s%2===0){const n=ch[(s>>(BGM.hot?0:1))%3]+(s>=8?12:0);tone(st(n+12),t,dur*1.6,{vol:.05,dest:MUS})} // 琶音
+  if(BGM.hot&&s%4===2)tone(st(ch[2]+24),t,dur,{type:"square",vol:.025,dest:MUS})}
+function bgmTick(){if(!BGM.on)return;while(BGM.next<AC.currentTime+.12){bgmStep(BGM.step,BGM.next);BGM.next+=60/BGM.bpm/4;BGM.step=(BGM.step+1)%64}}
+function bgmStart(){if(!PREF.music||BGM.on)return;try{ac();BGM.on=true;BGM.step=0;BGM.next=AC.currentTime+.06;BGM.timer=setInterval(bgmTick,25)}catch(e){}}
+function bgmStop(){BGM.on=false;clearInterval(BGM.timer);BGM.timer=null;BGM.hot=false;BGM.bpm=120}
+function bgmHot(x){if(BGM.hot===x)return;BGM.hot=x;BGM.bpm=x?168:120}
+document.addEventListener("visibilitychange",()=>{if(!AC)return;if(document.hidden)AC.suspend();else AC.resume()});
+function confetti(){const c=["#ffd23f","#ff5a5f","#3ddc84","#4dabf7","#b197fc","#fff"];
+  for(let i=0;i<70;i++){const d=document.createElement("i");d.className="confetti";
+    d.style.cssText=`left:${Math.random()*100}vw;background:${c[i%c.length]};animation-delay:${Math.random()*.6}s;animation-duration:${1.6+Math.random()*1.4}s;transform:rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(d);setTimeout(()=>d.remove(),3800)}}
+
+/* ========= 工具 ========= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const app=$("#app");
+let timers=[];const clearTimers=()=>{timers.forEach(t=>{clearInterval(t);clearTimeout(t)});timers=[]};
+function popText(txt,color){const d=document.createElement("div");d.className="pop";d.textContent=txt;d.style.color=color;document.body.appendChild(d);setTimeout(()=>d.remove(),750)}
+function activeUnits(){if(PREF.units&&PREF.units.length)return PREF.units;
+  if(PREF.subj&&PREF.subj!=="all")return SUBJ[PREF.subj].u;return Object.keys(UNITS)}
+function pool(units){const set=new Set(units||activeUnits());const vs=PREF.vols||[];
+  return Q.filter(q=>set.has(q.u)&&(!vs.length||vs.includes(q.vol)))}
+/* 加權抽題：錯過的題、沒看過的題較常出現，已熟練的較少 */
+function weightOf(q){const s=S[q.id];if(!s)return 3;if(BOOK.has(q.id))return 5;if(s.s>=3)return .6;if(s.s>=2)return 1.2;return 2}
+function makeDeck(list){const arr=list.map(q=>({q,k:Math.pow(Math.random(),1/weightOf(q))}));arr.sort((a,b)=>b.k-a.k);return arr.map(x=>x.q)}
+function optionsOf(q){return q.tf?["O","X"]:shuffle([q.a,...q.w])}
+function tagHTML(q){const sj=SUBJ[subjOf(q.u)];return `<span class="tag" style="background:${sj.c}"><img src="${ART(q.u)}" alt="" onerror="this.style.display='none'">${sj.n}｜${UNITS[q.u]}｜${esc(q.src)}</span>`}
+function unitProgress(u){const l=Q.filter(q=>q.u===u);return Math.round(l.filter(mastered).length/l.length*100)}
+
+/* ========= 首頁 ========= */
+function home(){clearTimers();bgmStop();document.body.classList.remove("noscroll");
+  const total=Q.length,mast=Q.filter(mastered).length;
+  const subjChip=(k,n)=>`<button class="chip s-${k} ${PREF.subj===k&&!PREF.units.length?"on":""}" data-subj="${k}">${IMG.has("subj_"+k)?artTag("subj_"+k,"sic")+n.replace(/^\S+\s/,""):n}</button>`;
+  const modeCard=(m,cls,ic,title,desc,extra="")=>`<button class="mode ${cls} ${IMG.has("mode_"+m)?"hasart":""}" data-go="${m}"><div class="ic">${ic}</div><h3>${title}${extra}</h3><p>${desc}</p>${artTag("mode_"+m,"mart")}</button>`;
+  app.innerHTML=`
+  <div class="hero">
+    ${IMG.has("hero")?`<div class="banner" style="--heroimg:url('img/hero.webp')">
+      <span class="badge">國中會考自然｜知識挑戰遊戲・康軒版</span><h1>自然戰力覺醒</h1>${artTag("mascot_think","mascot")}</div>`
+    :`${artTag("mascot_think","mascot")}<span class="badge">國中會考自然｜知識挑戰遊戲・康軒版</span><h1>自然戰力覺醒</h1>`}
+    <p class="slogan"><b>解鎖知識，挑戰你的自然實力！</b><br>生物、理化、地科，學過的知識真的都會了嗎？</p>
+    <div class="stats"><span class="stat"><b>${mast}</b>/ ${total} 已熟練</span><span class="stat"><b>${BOOK.size}</b>錯題待複習</span><span class="stat"><b>${Object.keys(S).length}</b>題已挑戰</span></div>
+  </div>
+  <div class="namebox">玩家名稱 <input id="pname" maxlength="12" placeholder="輸入暱稱" value="${esc(PREF.name||"")}"> <button class="iconbtn" id="snd" title="音效開關">${PREF.sound?"🔊":"🔇"}</button> <button class="iconbtn" id="mus" title="背景音樂開關" style="${PREF.music?"":"opacity:.45"}">🎵</button></div>
+  <div class="filter">
+    <div class="row">
+      <button class="chip ${PREF.subj==="all"&&!PREF.units.length?"on":""}" data-subj="all">全部</button>
+      ${subjChip("bio","🌱 生物")}${subjChip("chem","⚗️ 化學")}${subjChip("phy","⚡ 物理")}${subjChip("earth","🌏 地科")}
+      <button class="chip ${PREF.units.length?"on":""}" id="pick">🎯 自選單元${PREF.units.length?`（${PREF.units.length}）`:""}</button>
+      <span class="sum">出題範圍：<b>${pool().length}</b> 題</span>
+    </div>
+    <div class="row" style="margin-top:8px"><span style="color:var(--mute);font-size:14px">題目來源</span>
+      <button class="chip ${!(PREF.vols||[]).length?"on":""}" data-vol="">全部</button>
+      ${VOLS.map(v=>`<button class="chip ${(PREF.vols||[]).includes(v)?"on":""}" data-vol="${v}">${VOLNAME(v)}</button>`).join("")}
+    </div>
+    <div class="units ${PREF.units.length?"":"hide"}" id="units">
+      ${Object.keys(UNITS).map(u=>`<button class="unit ${PREF.units.includes(u)?"on":""}" data-u="${u}"><img src="${ART(u)}" alt="" onerror="this.style.visibility='hidden'"><span style="flex:1">${UNITS[u]}<div class="bar"><i style="width:${unitProgress(u)}%"></i></div></span></button>`).join("")}
+    </div>
+  </div>
+  <div class="cta">⚔️ 準備迎接挑戰，看看你的自然戰力有多強！</div>
+  <div class="modes">
+    ${modeCard("speed","m1","⚡","極速 60 秒","60 秒內答越多越好，連對有加成，答錯扣 3 秒")}
+    ${modeCard("survive","m2","❤️","生存挑戰","三條命，每題限時越來越短，看你撐幾題")}
+    ${modeCard("practice","m3","📚","單元特訓","15 題，每題都看考點解說，拿三顆星")}
+    ${modeCard("duel","m4","⚔️","雙人對決","同一台平板面對面搶答，先答對的得分")}
+    ${modeCard("review","m5","📕","錯題特訓","只練答錯過的考點，連對兩次就畢業",`<span class="cnt">${BOOK.size}</span>`)}
+    ${modeCard("board","m6","🏆","排行榜","這台裝置上的最高分紀錄")}
+    ${modeCard("dex","m7","📖","考點圖鑑","依單元瀏覽全部必背考點，可搜尋")}
+  </div>
+  <div class="foot">考點整理自 <a href="https://bgjd315-cloud.github.io/cap-science-map/" target="_blank" rel="noopener">會考自然考點地圖</a> 與康軒版自然七上～九下課本，<br>並逐題比對 ${YR} 年歷屆國中教育會考自然科試題，只保留會考考過的考點・紀錄只存在這台裝置</div>`;
+  $("#pname").oninput=e=>{PREF.name=e.target.value.trim();save()};
+  $("#snd").onclick=()=>{PREF.sound=!PREF.sound;save();home();if(PREF.sound)beep("tick")};
+  $("#mus").onclick=()=>{PREF.music=!PREF.music;save();home()};
+  app.querySelectorAll("[data-subj]").forEach(b=>b.onclick=()=>{PREF.subj=b.dataset.subj;PREF.units=[];save();home()});
+  app.querySelectorAll("[data-vol]").forEach(b=>b.onclick=()=>{const v=b.dataset.vol;PREF.vols=PREF.vols||[];
+    if(!v)PREF.vols=[];else{const i=PREF.vols.indexOf(v);if(i>=0)PREF.vols.splice(i,1);else PREF.vols.push(v)}save();home()});
+  $("#pick").onclick=()=>{$("#units").classList.toggle("hide")};
+  app.querySelectorAll("[data-u]").forEach(b=>b.onclick=()=>{const u=b.dataset.u;const i=PREF.units.indexOf(u);
+    if(i>=0)PREF.units.splice(i,1);else PREF.units.push(u);save();home();$("#units").classList.remove("hide")});
+  app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{const m=b.dataset.go;
+    if(m==="board")return board();if(m==="dex")return dex();
+    if(m==="review"&&!BOOK.size){alert("目前沒有錯題，先去玩其他模式吧！");return}
+    if(m==="duel")return duelStart();
+    startGame(m)});
+}
+
+/* ========= 單人遊戲 ========= */
+let G;
+function startGame(mode){
+  let list=mode==="review"?Q.filter(q=>BOOK.has(q.id)):pool();
+  if(!list.length){alert("出題範圍沒有題目");return}
+  G={mode,deck:makeDeck(list),i:0,score:0,combo:0,maxCombo:0,right:0,wrong:0,missed:[],answered:0,
+     time:60,lives:3,limit:12,qTime:0,locked:false,total:mode==="practice"||mode==="review"?Math.min(15,list.length):Infinity};
+  countdown(()=>{if(mode==="speed"){G.end=Date.now()+60000;timers.push(setInterval(speedTick,100))}
+    if(mode==="speed"||mode==="survive")bgmStart();nextQ()});
+}
+function countdown(cb){const d=document.createElement("div");d.className="countdown";document.body.appendChild(d);let n=3;
+  const step=()=>{if(n===0){d.textContent="GO!";beep("go");setTimeout(()=>{d.remove();cb()},400);return}d.textContent=n;beep("tick");n--;setTimeout(step,600)};step()}
+function speedTick(){const left=Math.max(0,G.end-Date.now());G.time=left/1000;const t=$("#tbar");
+  if(t){t.style.width=(left/600)+"%";t.parentElement.classList.toggle("low",left<10000)}
+  const tb=$("#tval");if(tb)tb.textContent=Math.ceil(G.time);
+  if(left<10000&&left>0){bgmHot(true);const sec=Math.ceil(left/1000);if(sec!==G.lastSec){G.lastSec=sec;beep("warn")}}else if(left>=10000)bgmHot(false);
+  if(left<=0)finish()}
+function hudHTML(){const m=G.mode;let left="";
+  if(m==="speed")left=`<div class="box"><small>時間</small><b id="tval">${Math.ceil(G.time)}</b></div>`;
+  if(m==="survive")left=`<div class="box"><small>生命</small><b class="hearts">${"❤️".repeat(G.lives)}${"🤍".repeat(3-G.lives)}</b></div>`;
+  if(m==="practice"||m==="review")left=`<div class="box"><small>題數</small><b>${G.i+1}/${G.total}</b></div>`;
+  return `<div class="top"><button class="back" id="quit">✕ 離開</button><div class="ttl">${MODES[m]}</div></div>
+  <div class="hud">${left}<div class="box"><small>分數</small><b>${G.score}</b></div><div class="box grow"><small>連對</small><b class="combo">${G.combo>1?"🔥×"+G.combo:"—"}</b></div>
+  <div class="box"><small>答對</small><b>${G.right}</b></div></div>`}
+function nextQ(){
+  if(G.i>=G.total||(G.mode==="survive"&&G.lives<=0))return finish();
+  if(G.i>=G.deck.length)G.deck=G.deck.concat(makeDeck(G.deck.slice(0,G.deck.length)));
+  const q=G.deck[G.i];G.cur=q;G.opts=optionsOf(q);G.locked=false;
+  const timed=G.mode!=="speed";
+  if(G.mode==="survive")G.limit=Math.max(5,12-G.right*.3);
+  const lim=G.mode==="survive"?G.limit:20;
+  app.innerHTML=hudHTML()+`<div class="timer" ${G.mode==="speed"?"":"id='qt'"}><i id="tbar" style="width:100%"></i></div>
+  <div class="qcard" id="qc">${tagHTML(q)}<div class="q">${q.tf?'<span class="tfmark">是非</span>':""}${esc(q.q)}</div></div>
+  <div class="opts ${q.tf?"tf":""}" id="opts">${G.opts.map((o,i)=>`<button class="opt" data-i="${i}"><span class="k">${i+1}</span>${q.tf?(o==="O"?"⭕":"❌"):esc(o)}</button>`).join("")}</div>
+  <div id="fb"></div>`;
+  $("#quit").onclick=()=>{if(confirm("確定要離開這一局嗎？")){clearTimers();home()}};
+  app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>answer(+b.dataset.i));
+  if(timed){G.qEnd=Date.now()+lim*1000;const id=setInterval(()=>{if(G.locked)return;const left=G.qEnd-Date.now();
+      const bar=$("#tbar");if(bar){bar.style.width=Math.max(0,left/(lim*10))+"%";bar.parentElement.classList.toggle("low",left<3000)}
+      if(left<=0){clearInterval(id);answer(-1)}},100);timers.push(id);G.qTimer=id}
+  if(G.mode==="speed")speedTick();
+}
+function answer(i){if(G.locked)return;G.locked=true;if(G.qTimer){clearInterval(G.qTimer);G.qTimer=null}
+  const q=G.cur,picked=i>=0?G.opts[i]:null,ok=picked===q.a;G.answered++;
+  record(q,ok);save();
+  const btns=app.querySelectorAll(".opt");btns.forEach((b,j)=>{const o=G.opts[j];if(o===q.a)b.classList.add("ok");else if(j===i)b.classList.add("no");else b.classList.add("dim")});
+  if(ok){G.right++;G.combo++;G.maxCombo=Math.max(G.maxCombo,G.combo);const bonus=Math.min(G.combo-1,5)*20;let pts=100+bonus;
+    if(G.mode==="survive")pts+=Math.round(Math.max(0,G.qEnd-Date.now())/100);
+    G.score+=pts;beep("ok",G.combo);popText(G.combo>2?`+${pts} 🔥${G.combo}`:`+${pts}`,"var(--gold)")}
+  else{G.wrong++;G.combo=0;G.missed.push({q,picked});beep("bad");$("#qc").classList.add("shake");
+    if(G.mode==="speed"){G.end-=3000;popText("−3 秒","var(--bad)")}
+    if(G.mode==="survive"){G.lives--;popText(i<0?"時間到！":"💔","var(--bad)");if(G.lives===1)bgmHot(true)}}
+  const ansTxt=q.tf?(q.a==="O"?"⭕ 正確":"❌ 錯誤"):q.a;
+  const fb=$("#fb");
+  const showExp=G.mode==="practice"||G.mode==="review"||!ok;
+  if(showExp)fb.innerHTML=`<div class="feedback ${ok?"good":"bad"}">${artTag(ok?"mascot_happy":"mascot_oops","fm")}<div>${ok?"答對了！":"正解："+`<b>${esc(ansTxt)}</b>`}<br>📌 ${esc(q.e)}${q.yrs.length?`<br><span style="color:var(--gold);font-size:14px">${yrsTxt(q)}</span>`:""}</div></div>`;
+  // 更新 HUD
+  const hud=app.querySelector(".hud");if(hud){const tmp=document.createElement("div");tmp.innerHTML=hudHTML();hud.replaceWith(tmp.querySelector(".hud"));
+    const t=document.querySelector(".top");t.replaceWith(tmp.querySelector(".top"));$("#quit").onclick=()=>{if(confirm("確定要離開這一局嗎？")){clearTimers();home()}}}
+  G.i++;
+  if(G.mode==="practice"||G.mode==="review"){fb.insertAdjacentHTML("beforeend",`<button class="next" id="nx">${G.i>=G.total?"看結果":"下一題 ➜"}（Enter）</button>`);$("#nx").onclick=nextQ;$("#nx").focus()}
+  else if(G.mode==="speed"){const t=setTimeout(nextQ,ok?350:1600);timers.push(t)}
+  else{const t=setTimeout(nextQ,ok?500:2000);timers.push(t)}
+}
+document.addEventListener("keydown",e=>{
+  if(DUEL){const map={"1":[0,0],"2":[0,1],"3":[0,2],"4":[0,3],"7":[1,0],"8":[1,1],"9":[1,2],"0":[1,3]};const m=map[e.key];if(m)duelAnswer(m[0],m[1]);return}
+  if(!G||!$("#opts"))return;
+  if(e.key==="Enter"&&$("#nx")){e.preventDefault();$("#nx").click();return}
+  let k=e.key.toLowerCase();if(G.cur&&G.cur.tf){if(k==="o")k="1";if(k==="x")k="2"}
+  const n=parseInt(k,10);if(n>=1&&n<=G.opts.length)answer(n-1)});
+
+function finish(){clearTimers();bgmStop();if(!G||G.done)return;G.done=true;let isRec=false;
+  const acc=G.answered?Math.round(G.right/G.answered*100):0;
+  let stars="";if(G.mode==="practice"||G.mode==="review"){const n=acc>=90?3:acc>=70?2:acc>=40?1:0;stars=`<div class="stars">${"⭐".repeat(n)}${"☆".repeat(3-n)}</div>`}
+  let rec="";const name=PREF.name||"無名英雄";
+  if(G.mode==="speed"||G.mode==="survive"){const key=G.mode+"|"+(PREF.units.length?"自選":PREF.subj);
+    const arr=LB[key]||(LB[key]=[]);const best=arr.length?arr[0].s:0;
+    arr.push({n:name,s:G.score,r:G.right,a:acc,d:new Date().toLocaleDateString("zh-TW")});arr.sort((a,b)=>b.s-a.s);LB[key]=arr.slice(0,10);save();
+    if(G.score>best&&G.score>0){isRec=true;rec=`<div><span class="newrec">🎉 新紀錄！</span></div>`}}
+  if(isRec){beep("cheer");confetti()}else beep("end");
+  const scopeName=PREF.units.length?`自選 ${PREF.units.length} 單元`:(PREF.subj==="all"?"全部範圍":SUBJ[PREF.subj].n);
+  app.innerHTML=`<div class="top"><button class="back" id="hm">🏠 首頁</button><div class="ttl">${MODES[G.mode]}・${G.mode==="review"?"錯題本":scopeName}</div></div>
+  <div class="result">${artTag("mascot_trophy","trophy")}${rec}${stars}<div class="big">${G.score}</div><div style="color:var(--mute)">${esc(name)} 的得分</div>
+  <div class="rgrid"><div><small>答對</small><b>${G.right}</b></div><div><small>正確率</small><b>${acc}%</b></div><div><small>最高連對</small><b>${G.maxCombo}</b></div></div>
+  <div class="btnrow"><button class="btn gold" id="again">🔁 再玩一次</button>${BOOK.size?`<button class="btn" id="rev">📕 練錯題（${BOOK.size}）</button>`:""}<button class="btn" id="hm2">選其他模式</button></div>
+  ${G.missed.length?`<h3 style="text-align:left;margin-top:18px">這局要記住的考點（${G.missed.length}）</h3><div class="list">${G.missed.map(m=>itemHTML(m.q,m.picked)).join("")}</div>`:`<p>全部答對，太強了！</p>`}</div>`;
+  $("#hm").onclick=$("#hm2").onclick=home;$("#again").onclick=()=>startGame(G.mode);
+  if($("#rev"))$("#rev").onclick=()=>startGame("review");
+}
+function itemHTML(q,picked){const ans=q.tf?(q.a==="O"?"⭕ 正確":"❌ 錯誤"):q.a;
+  return `<div class="item"><div class="uq">${SUBJ[subjOf(q.u)].n}｜${UNITS[q.u]}｜${esc(q.src)}</div><div class="qq">${q.tf?"【是非】":""}${esc(q.q)}</div>
+  <div class="aa">✔ ${esc(ans)}</div>${q.yrs.length?`<div class="uq" style="color:var(--gold)">${yrsTxt(q)}</div>`:""}${picked!==undefined?`<div class="yourA">${picked===null?"⏰ 時間到":"✘ 你選："+esc(q.tf?(picked==="O"?"⭕":"❌"):picked)}</div>`:""}<div class="ee">📌 ${esc(q.e)}</div></div>`}
+
+/* ========= 排行榜 ========= */
+function board(tab){const keys=Object.keys(LB);tab=tab||keys[0];
+  const label=k=>{const [m,s]=k.split("|");return MODES[m]+"・"+(s==="all"?"全部":s==="自選"?"自選":SUBJ[s].n)};
+  app.innerHTML=`<div class="top"><button class="back" id="hm">🏠 首頁</button><div class="ttl">🏆 排行榜</div></div>
+  ${keys.length?`<div class="tabs">${keys.map(k=>`<button class="chip ${k===tab?"on":""}" data-k="${k}">${label(k)}</button>`).join("")}</div>
+  <table class="lb"><tr><th>名次</th><th>玩家</th><th>分數</th><th>答對</th><th>正確率</th><th>日期</th></tr>
+  ${LB[tab].map((r,i)=>`<tr><td>${["🥇","🥈","🥉"][i]||i+1}</td><td>${esc(r.n)}</td><td>${r.s}</td><td>${r.r}</td><td>${r.a}%</td><td>${r.d}</td></tr>`).join("")}</table>
+  <div class="btnrow"><button class="btn" id="clr">清除排行榜</button></div>`:`<p style="text-align:center;color:var(--mute)">還沒有紀錄，玩一場「極速 60 秒」或「生存挑戰」吧！</p>`}`;
+  $("#hm").onclick=home;app.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>board(b.dataset.k));
+  if($("#clr"))$("#clr").onclick=()=>{if(confirm("確定清除這台裝置的所有排行榜紀錄？")){LB={};save();board()}}}
+
+/* ========= 考點圖鑑 ========= */
+function dex(){app.innerHTML=`<div class="top"><button class="back" id="hm">🏠 首頁</button><div class="ttl">📖 考點圖鑑</div></div>
+  <input class="search" id="kw" placeholder="搜尋關鍵字，例如：滲透、凸透鏡、黑潮"><div id="dl"></div>`;
+  $("#hm").onclick=home;const draw=()=>{const kw=$("#kw").value.trim();const units=activeUnits();let h="";
+    const P=pool();for(const u of units){const l=P.filter(q=>q.u===u&&(!kw||(q.q+q.a+q.e).includes(kw)));if(!l.length)continue;
+      h+=`<div class="dexunit"><img src="${ART(u)}" alt="" onerror="this.style.display='none'"><h3>${u.slice(1)}｜${UNITS[u]}</h3><span style="color:var(--mute);font-size:13px">熟練 ${unitProgress(u)}%</span></div>`+l.map(q=>itemHTML(q)).join("")}
+    $("#dl").innerHTML=h||`<p style="color:var(--mute)">找不到符合的考點（目前範圍：${PREF.units.length?"自選單元":PREF.subj==="all"?"全部":SUBJ[PREF.subj].n}）</p>`};
+  $("#kw").oninput=draw;draw()}
+
+/* ========= 雙人對決 ========= */
+let DUEL=null;
+function duelStart(){const list=pool();if(!list.length)return;
+  DUEL={deck:makeDeck(list),i:0,sc:[0,0],win:10,lock:[false,false],done:false};
+  const el=document.createElement("div");el.className="duel";el.id="duel";
+  const half=p=>`<div class="half p${p+1}"><div class="pscore"><span>${p?"🔵 玩家 2":"🔴 玩家 1"}</span><span class="sc" id="sc${p}">0</span></div>
+    <div class="dq" id="dq${p}"></div><div class="opts" id="do${p}"></div><div class="msg" id="dm${p}"></div></div>`;
+  el.innerHTML=half(0)+`<div class="mid" style="position:relative"><span>先拿 ${DUEL.win} 分獲勝</span><span id="dround"></span><button class="quit" id="dquit">離開</button></div>`+half(1);
+  document.body.appendChild(el);document.body.style.overflow="hidden";
+  $("#dquit").onclick=()=>duelEnd(true);
+  countdown(()=>{bgmStart();duelNext()})}
+function duelNext(){if(!DUEL)return;clearTimers();
+  if(DUEL.i>=DUEL.deck.length)DUEL.deck=DUEL.deck.concat(makeDeck(DUEL.deck));
+  const q=DUEL.deck[DUEL.i++];DUEL.q=q;DUEL.opts=optionsOf(q);DUEL.lock=[false,false];DUEL.open=true;
+  $("#dround").textContent=`第 ${DUEL.i} 題`;
+  for(const p of [0,1]){$("#dq"+p).innerHTML=`${q.tf?'<span class="tfmark">是非</span>':""}${esc(q.q)}`;
+    const o=$("#do"+p);o.className="opts"+(q.tf?" tf":"");
+    o.innerHTML=DUEL.opts.map((x,i)=>`<button class="opt" data-i="${i}"><span class="k">${p?[7,8,9,0][i]:i+1}</span>${q.tf?(x==="O"?"⭕":"❌"):esc(x)}</button>`).join("");
+    o.querySelectorAll(".opt").forEach(b=>b.onclick=()=>duelAnswer(p,+b.dataset.i));$("#dm"+p).textContent=""}
+  timers.push(setTimeout(()=>duelReveal(null),15000))}
+function duelAnswer(p,i){if(!DUEL||!DUEL.open||DUEL.lock[p]||i>=DUEL.opts.length)return;const q=DUEL.q;
+  if(DUEL.opts[i]===q.a){DUEL.sc[p]++;$("#sc"+p).textContent=DUEL.sc[p];beep("ok",DUEL.sc[p]);if(Math.max(...DUEL.sc)>=DUEL.win-2)bgmHot(true);record(q,true);save();duelReveal(p)}
+  else{DUEL.lock[p]=true;beep("bad");$("#do"+p).querySelectorAll(".opt")[i].classList.add("no");$("#do"+p).classList.add("lock");$("#dm"+p).textContent="答錯了，這題鎖住！";
+    if(DUEL.lock[0]&&DUEL.lock[1]){record(q,false);save();duelReveal(null)}}}
+function duelReveal(winner){if(!DUEL||!DUEL.open)return;DUEL.open=false;clearTimers();const q=DUEL.q;
+  for(const p of [0,1]){const o=$("#do"+p);o.classList.remove("lock");o.querySelectorAll(".opt").forEach((b,j)=>{if(DUEL.opts[j]===q.a)b.classList.add("ok");else if(!b.classList.contains("no"))b.classList.add("dim")});
+    $("#dm"+p).textContent=(winner===p?"🎉 搶答成功！ ":winner===null?"沒人答對 ":"對手先答對 ")+"📌 "+q.e}
+  if(DUEL.sc[0]>=DUEL.win||DUEL.sc[1]>=DUEL.win){timers.push(setTimeout(()=>duelEnd(false),2600));return}
+  timers.push(setTimeout(duelNext,3200))}
+function duelEnd(quit){clearTimers();bgmStop();const d=DUEL;DUEL=null;const el=$("#duel");if(el)el.remove();document.body.style.overflow="";
+  if(quit||!d){home();return}beep("cheer");confetti();const w=d.sc[0]>d.sc[1]?"🔴 玩家 1":"🔵 玩家 2";
+  app.innerHTML=`<div class="top"><button class="back" id="hm">🏠 首頁</button><div class="ttl">⚔️ 雙人對決</div></div>
+  <div class="result">${artTag("mascot_trophy","trophy")}<div class="big">${w} 獲勝！</div><div class="rgrid" style="grid-template-columns:1fr 1fr"><div><small>🔴 玩家 1</small><b>${d.sc[0]}</b></div><div><small>🔵 玩家 2</small><b>${d.sc[1]}</b></div></div>
+  <div class="btnrow"><button class="btn gold" id="again">🔁 再戰一回</button><button class="btn" id="hm2">回首頁</button></div></div>`;
+  $("#hm").onclick=$("#hm2").onclick=home;$("#again").onclick=duelStart}
+
+home();
+</script>
+</body>
+</html>
